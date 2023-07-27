@@ -3,6 +3,7 @@ import axiosClient from "../axios";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
+    isEdit: false,
     isLoading: false,
     user: {
       data: [],
@@ -65,37 +66,32 @@ export const useUserStore = defineStore("user", {
     async createAddress(address: {}) {
       await axiosClient.post("/address", address);
     },
-    async updateBranch(user: {}, userId: number) {
+    async updateUser(user: {}, userId: number) {
       try {
-        const response = await axiosClient.put(`/branch/${branchId}`, branch);
+        const response = await axiosClient.put(`/user/${userId}`, user);
         return response.data;
       } catch (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          const errorMessage = error.response.data.message;
-          return { erroMsg: errorMessage };
+        if (error.response.data) {
+          return { erroMsg: error.response.data };
         } else {
           console.log("Erro desconhecido");
         }
         throw error;
       }
     },
-    // async updateAddress(address: {}, addressId: number) {
-    //   try {
-    //     await axiosClient.put(`/address/${addressId}`, address);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
-    // async deleteBranch(id: number) {
-    //   await axiosClient.delete(`/branch/${id}`);
-    // },
-    // async deleteAddress(id: number) {
-    //   await axiosClient.delete(`/address/${id}`);
-    // },
+    async updateAddress(address: {}, addressId: number) {
+      try {
+        await axiosClient.put(`/address/${addressId}`, address);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteUser(id: number) {
+      await axiosClient.delete(`/user/${id}`);
+    },
+    async deleteAddress(id: number) {
+      await axiosClient.delete(`/address/${id}`);
+    },
     async getUser(id: number) {
       const response = await axiosClient.get(`/user/${id}`);
       console.log(response.data);
@@ -104,6 +100,6 @@ export const useUserStore = defineStore("user", {
     },
   },
   getters: {
-    // showData: (state) => state.branch.data,
+    // showIsEdit: (state) => state.isEdit,
   },
 });

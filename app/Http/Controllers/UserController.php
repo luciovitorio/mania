@@ -86,18 +86,39 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
-        // Verifica se o email fornecido é diferente do email atual da filial
-        // if ($request->email !== $branch->email) {
-        //     $existingBranch = Branch::where('email', $request->email)->first();
-        //     if ($existingBranch) {
-        //         $message = 'Já existe uma filial cadastrada com esse e-mail';
-        //         return response()->json(['message' => $message], Response::HTTP_CONFLICT);
-        //     }
-        // }
+        // Verifica se já existe o email e/ou CPF cadastrado
+        if ($request->email !== null) {
+            $existingUser = User::where('email', $request->email)
+                ->where('id', '!=', $user->id)
+                ->first();
+        } else {
+            $existingUser = User::where('cpf', $request->cpf)
+                ->where('id', '!=', $user->id)
+                ->first();
+        }
 
-        // $user->update($request->validated());
 
-        // return new BranchResource($branch);
+        if ($existingUser) {
+            $messageEmail = null;
+            $messageCPF = null;
+
+            if ($existingUser->email !== null && $existingUser->email === $request->email) {
+                $messageEmail = 'Já existe um usuário cadastrado com esse e-mail';
+            }
+
+            if ($existingUser->cpf === $request->cpf) {
+                $messageCPF = 'Já existe um usuário cadastrado com esse CPF';
+            }
+
+            return response()->json([
+                'messageEmail' => $messageEmail,
+                'messageCPF' => $messageCPF,
+            ], Response::HTTP_CONFLICT);
+        }
+
+        $user->update($request->validated());
+
+        return new UserResource($user);
     }
 
     /**
@@ -105,6 +126,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->noContent();
     }
 }

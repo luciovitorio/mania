@@ -676,16 +676,6 @@ function isValidCPF(value) {
   return cpfRegex.test(value);
 }
 
-function buttonEdit() {
-  isCreatingUser.value = false;
-}
-
-function buttonCreate() {
-  isCreatingUser.value = true;
-}
-
-const isCreatingUser = ref(true);
-
 const rules = {
   user: {
     branchId: { required },
@@ -715,16 +705,8 @@ const rules = {
 };
 
 const $v = useVuelidate(rules, { user, address });
-console.log(rules.user.password);
 
 const submitForm = async () => {
-  if (true) {
-    console.log("entrou");
-    rules.user.password = {};
-    console.log(rules.user.password);
-  }
-  console.log(isCreatingUser.value);
-  console.log(user.value.id);
   isSubmitForm.value = true;
   $v.value.user.$touch();
   $v.value.address.$touch();
@@ -736,7 +718,6 @@ const submitForm = async () => {
   try {
     loading.value = true;
     if (user.value.id) {
-      return console.log(user.value, user.value.id);
       const userUpdated = await userStore.updateUser(user.value, user.value.id);
       if (userUpdated.erroMsg) {
         console.log("entrou erro");
@@ -746,10 +727,10 @@ const submitForm = async () => {
         loading.value = false;
         return;
       }
-      await branchStore.updateAddress(address.value, address.value.id);
-      showMessage("Filial alterada com sucesso!", "#fff");
+      await userStore.updateAddress(address.value, address.value.id);
+      showMessage("Usuário alterado com sucesso!", "#fff");
       loading.value = false;
-      branchStore.getBranches();
+      userStore.getUsers();
       closeModal();
     } else {
       console.log(user.value);

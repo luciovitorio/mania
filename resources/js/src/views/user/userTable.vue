@@ -400,6 +400,43 @@ function sortUser(field) {
   getUsers();
 }
 
+async function deleteUser(user) {
+  Swal.fire({
+    icon: "question",
+    title: `Deseja excluir a filial ${user.name}?`,
+    text: "Essa ação não poderá ser desfeita!",
+    showCancelButton: true,
+    showLoaderOnConfirm: true,
+    confirmButtonText: "Excluir",
+    confirmButtonColor: "#E7515A",
+    cancelButtonText: "Cancelar",
+    padding: "2em",
+    customClass: "sweet-alerts",
+    preConfirm: () => {
+      return userStore
+        .deleteAddress(user.address.id)
+        .then(() => {
+          userStore.deleteUser(user.id);
+        })
+        .then(() => {
+          userStore.getUsers();
+          Swal.fire({
+            title: "Excluído!",
+            icon: "success",
+            customClass: "sweet-alerts",
+          });
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Não foi possível excluir o registro no momento",
+            customClass: "sweet-alerts",
+          });
+        });
+    },
+  });
+}
+
 function onModalClose() {
   userModel.value = { ...DEFAULT_USER_OBJECT };
   userAddress.value = { ...DEFAULT_ADDRESS_OBJECT };

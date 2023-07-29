@@ -35,7 +35,7 @@
                   {{
                     user.id
                       ? `Atualizar Usuário: "${props.user.name}"`
-                      : "Criar novo Usuário"
+                      : "Cadastrar novo Usuário"
                   }}
                 </header>
                 <button

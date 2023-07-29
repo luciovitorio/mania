@@ -87,7 +87,7 @@
       <!--  END SIDEBAR  -->
 
       <!--  BEGIN CONTENT AREA  -->
-      <div class="main-content">
+      <div class="main-content flex flex-col">
         <!--  BEGIN TOP NAVBAR  -->
         <Header />
         <!--  END TOP NAVBAR  -->

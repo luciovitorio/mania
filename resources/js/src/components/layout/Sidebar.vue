@@ -203,7 +203,7 @@
                 </li>
                 <li class="nav-item">
                   <router-link
-                    to="/apps/scrumboard"
+                    to="/planos"
                     class="group"
                     @click="toggleMobileMenu"
                   >

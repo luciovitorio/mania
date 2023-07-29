@@ -3,6 +3,7 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::middleware(['auth:sanctum', 'admin'])
         Route::resource('/branch', BranchController::class);
         Route::resource('/address', AddressController::class);
         Route::resource('/user', UserController::class);
+        Route::resource('/plan', PlanController::class);
     });
 
 

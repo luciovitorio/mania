@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('simplePieceQuantity');
             $table->integer('difficultPieceQuantity');
             $table->decimal('simplePieceValue', 20, 2);
+            $table->decimal('difficultPieceValue', 20, 2);
             $table->decimal('additionalSimplePieceValue', 20, 2);
             $table->decimal('additionalDifficultPieceValue', 20, 2);
             $table->boolean('isActive')->default(true);

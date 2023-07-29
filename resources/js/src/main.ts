@@ -81,6 +81,9 @@ app.use(i18n);
 import { TippyPlugin } from "tippy.vue";
 app.use(TippyPlugin);
 
+import money from "v-money";
+app.use(money, { precision: 4 });
+
 //input mask
 import Maska from "maska";
 app.use(Maska);

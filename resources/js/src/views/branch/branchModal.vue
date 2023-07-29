@@ -323,7 +323,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, onUpdated, ref } from "vue";
+import { computed, defineEmits, onUpdated, ref, watch } from "vue";
 import {
   TransitionRoot,
   TransitionChild,
@@ -378,11 +378,11 @@ const searchCep = async () => {
 };
 
 const branch = ref({
-  id: props.branch.id,
-  name: props.branch.name,
-  email: props.branch.email,
-  phone: props.branch.phone,
-  whatsapp: props.branch.whatsapp,
+  ...props.branch,
+});
+
+const address = ref({
+  ...props.address,
 });
 
 // Mantendo os campos formatados no front
@@ -414,17 +414,6 @@ const whatsapp = computed({
   set: (value) => (branch.value.whatsapp = removeSpecialCharacters(value)),
 });
 
-const address = ref({
-  branchId: props.address.branchId,
-  cep: props.address.cep,
-  street: props.address.street,
-  number: props.address.number,
-  complement: props.address.complement,
-  district: props.address.district,
-  city: props.address.city,
-  state: props.address.state,
-});
-
 const loading = ref(false);
 
 const props = defineProps({
@@ -446,26 +435,19 @@ const show = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
-onUpdated(() => {
-  branch.value = {
-    id: props.branch.id,
-    name: props.branch.name,
-    email: props.branch.email,
-    phone: props.branch.phone,
-    whatsapp: props.branch.whatsapp,
-  };
-  address.value = {
-    branchId: props.address.branchId,
-    id: props.address.id,
-    cep: props.address.cep,
-    street: props.address.street,
-    number: props.address.number,
-    complement: props.address.complement,
-    district: props.address.district,
-    city: props.address.city,
-    state: props.address.state,
-  };
-});
+watch(
+  () => props.address,
+  (newAddress) => {
+    Object.assign(address.value, newAddress);
+  }
+);
+
+watch(
+  () => props.branch,
+  (newBranch) => {
+    Object.assign(branch.value, newBranch);
+  }
+);
 
 const isSubmitForm = ref(false);
 
@@ -514,7 +496,6 @@ const submitForm = async () => {
         branch.value.id
       );
       if (branchUpdated.erroMsg) {
-        console.log("entrou erro");
         showMessage(branchUpdated.erroMsg, "#FFF", "error", "danger");
         erroMsg.value.message = branchUpdated.erroMsg;
         loading.value = false;

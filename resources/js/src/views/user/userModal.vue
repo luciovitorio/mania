@@ -487,7 +487,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, onMounted, onUpdated, ref } from "vue";
+import { computed, defineEmits, onMounted, onUpdated, ref, watch } from "vue";
 import {
   TransitionRoot,
   TransitionChild,
@@ -540,20 +540,14 @@ const searchCep = async () => {
   address.value.state = "";
 };
 
-const branches = ref(props.branch);
+const branches = ref([...props.branch]);
 
 const user = ref({
-  id: props.user.id,
-  branchId: props.user.branchId,
-  name: props.user.name,
-  email: props.user.email,
-  password: props.user.password,
-  confirm_password: props.user.confirm_password,
-  cpf: props.user.cpf,
-  dateOfBirth: props.user.dateOfBirth,
-  profile: props.user.profile,
-  percent: props.user.percent,
-  isActive: props.user.isActive,
+  ...props.user,
+});
+
+const address = ref({
+  ...props.address,
 });
 
 // Mantendo os campos formatados no front
@@ -574,17 +568,6 @@ const cep = computed({
 const cpf = computed({
   get: () => formattedCPF.value,
   set: (value) => (user.value.cpf = removeSpecialCharacters(value)),
-});
-
-const address = ref({
-  userId: props.address.userId,
-  cep: props.address.cep,
-  street: props.address.street,
-  number: props.address.number,
-  complement: props.address.complement,
-  district: props.address.district,
-  city: props.address.city,
-  state: props.address.state,
 });
 
 const loading = ref(false);
@@ -611,33 +594,26 @@ const show = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
-onUpdated(() => {
-  branches.value = [];
-  user.value = {
-    branchId: props.user.branchId,
-    id: props.user.id,
-    name: props.user.name,
-    email: props.user.email,
-    password: props.user.password,
-    confirm_password: props.user.confirm_password,
-    cpf: props.user.cpf,
-    dateOfBirth: props.user.dateOfBirth,
-    profile: props.user.profile,
-    percent: props.user.percent,
-    isActive: props.user.isActive,
-  };
-  address.value = {
-    userId: props.address.userId,
-    id: props.address.id,
-    cep: props.address.cep,
-    street: props.address.street,
-    number: props.address.number,
-    complement: props.address.complement,
-    district: props.address.district,
-    city: props.address.city,
-    state: props.address.state,
-  };
-});
+watch(
+  () => props.user,
+  (newUser) => {
+    Object.assign(user.value, newUser);
+  }
+);
+
+watch(
+  () => props.address,
+  (newAddress) => {
+    Object.assign(address.value, newAddress);
+  }
+);
+
+watch(
+  () => props.branch,
+  (newBranch) => {
+    branches.value = [...newBranch];
+  }
+);
 
 const isSubmitForm = ref(false);
 
@@ -720,7 +696,6 @@ const submitForm = async () => {
     if (user.value.id) {
       const userUpdated = await userStore.updateUser(user.value, user.value.id);
       if (userUpdated.erroMsg) {
-        console.log("entrou erro");
         showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
         erroMsgEmail.value.message = userUpdated.erroMsg.messageEmail;
         erroMsgCPF.value.message = userUpdated.erroMsg.messageCPF;
@@ -733,10 +708,8 @@ const submitForm = async () => {
       userStore.getUsers();
       closeModal();
     } else {
-      console.log(user.value);
       // Criando o usuario e retornando o ID
       const userCreated = await userStore.createUser(user.value, address.value);
-      console.log(userCreated.erroMsg);
       if (userCreated.erroMsg) {
         showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
         erroMsgEmail.value.message = userCreated.erroMsg.messageEmail;
@@ -746,7 +719,6 @@ const submitForm = async () => {
       }
       // Criando o endereço e associando ao ID da filial
       address.value.userId = userCreated.id;
-      console.log(address.value.userId);
       await userStore.createAddress(address.value);
       showMessage("Usuário cadastrado com sucesso!", "#fff");
       loading.value = false;

@@ -474,7 +474,6 @@ const submitForm = async () => {
   try {
     loading.value = true;
     if (plan.value.id) {
-      console.log(plan.value);
       const planUpdated = await planStore.updatePlan(plan.value, plan.value.id);
       if (planUpdated.erroMsg) {
         showMessage(planUpdated.erroMsg.message, "#FFF", "error", "danger");
@@ -501,7 +500,9 @@ const submitForm = async () => {
       planStore.getPlans();
       closeModal();
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 function closeModal() {

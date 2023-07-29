@@ -59,7 +59,7 @@ class PlanController extends Controller
      */
     public function show(Plan $plan)
     {
-        //
+        return new PlanResource($plan);
     }
 
     /**
@@ -67,7 +67,22 @@ class PlanController extends Controller
      */
     public function update(PlanRequest $request, Plan $plan)
     {
-        //
+        // Verifica se já existe o email e/ou CPF cadastrado
+        if ($request->name !== null) {
+            $existingPlanName = Plan::where('name', $request->name)
+                ->where('id', '!=', $plan->id)
+                ->first();
+        }
+
+
+        if ($existingPlanName) {
+            $message = 'Já existe um plano cadastrado com esse nome';
+            return response()->json(['message' => $message], Response::HTTP_CONFLICT);
+        }
+
+        $plan->update($request->validated());
+
+        return new PlanResource($plan);
     }
 
     /**
@@ -75,6 +90,8 @@ class PlanController extends Controller
      */
     public function destroy(Plan $plan)
     {
-        //
+        $plan->delete();
+
+        return response()->noContent();
     }
 }

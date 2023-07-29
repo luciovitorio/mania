@@ -21,37 +21,28 @@ class Plan extends Model
         'isActive',
     ];
 
-    public function setSimplePieceValueAttribute($value)
+    // Accessor para formatar o campo "simplePieceValue" para o formato de moeda antes de retornar como JSON
+    public function getSimplePieceValueAttribute($value)
     {
-        $this->attributes['simplePieceValue'] = $this->limparValorMoeda($value);
+        return (float) $value;
     }
 
-    // Mutator para converter o campo "difficultPieceValue" para o formato numérico adequado antes de salvar no banco de dados
-    public function setDifficultPieceValueAttribute($value)
+    // Accessor para formatar o campo "difficultPieceValue" para o formato de moeda antes de retornar como JSON
+    public function getDifficultPieceValueAttribute($value)
     {
-        $this->attributes['difficultPieceValue'] = $this->limparValorMoeda($value);
+        return (float) $value;
     }
 
-    // Mutator para converter o campo "additionalSimplePieceValue" para o formato numérico adequado antes de salvar no banco de dados
-    public function setAdditionalSimplePieceValueAttribute($value)
+    // Accessor para formatar o campo "additionalSimplePieceValue" para o formato de moeda antes de retornar como JSON
+    public function getAdditionalSimplePieceValueAttribute($value)
     {
-        $this->attributes['additionalSimplePieceValue'] = $this->limparValorMoeda($value);
+        return (float) $value;
     }
 
-    // Mutator para converter o campo "additionalDifficultPieceValue" para o formato numérico adequado antes de salvar no banco de dados
-    public function setAdditionalDifficultPieceValueAttribute($value)
+    // Accessor para formatar o campo "additionalDifficultPieceValue" para o formato de moeda antes de retornar como JSON
+    public function getAdditionalDifficultPieceValueAttribute($value)
     {
-        $this->attributes['additionalDifficultPieceValue'] = $this->limparValorMoeda($value);
-    }
-
-    private function limparValorMoeda($valor)
-    {
-        // Remover o símbolo "R$" e quaisquer outros caracteres não numéricos (como pontos e vírgulas)
-        $valorLimpo = preg_replace("/[^0-9,]/", "", $valor);
-
-        // Substituir a vírgula por ponto para garantir o formato correto de número decimal
-        $valorDecimalFormatado = str_replace(',', '.', $valorLimpo);
-
-        return $valorDecimalFormatado;
+        // Converter o valor para número decimal (float)
+        return (float) $value;
     }
 }

@@ -69,8 +69,9 @@
                     <div
                       class="md:col-span-2"
                       :class="{
-                        'has-error': $v.plan.name.$error,
-                        'has-success': isSubmitForm && !$v.plan.name.$error,
+                        'has-error': $v.plan.name.$error || hasErrorMsg,
+                        'has-success':
+                          isSubmitForm && !$v.plan.name.$error && !hasErrorMsg,
                       }"
                     >
                       <label for="name">Nome</label>
@@ -83,6 +84,11 @@
                       <template v-if="isSubmitForm && $v.plan.name.$error">
                         <p class="text-danger mt-1 text-sm">
                           Por favor preencha esse campo
+                        </p>
+                      </template>
+                      <template v-if="hasErrorMsg">
+                        <p class="text-danger mt-1 text-sm">
+                          {{ erroMsg.message }}
                         </p>
                       </template>
                     </div>
@@ -133,7 +139,9 @@
                     <div
                       class="md:col-span-1"
                       :class="{
-                        'has-error': $v.plan.simplePieceQuantity.$error,
+                        'has-error':
+                          $v.plan.simplePieceQuantity.$error ||
+                          !isPiecesTotalValid,
                         'has-success':
                           isSubmitForm && !$v.plan.simplePieceQuantity.$error,
                       }"
@@ -156,6 +164,11 @@
                           Por favor preencha esse campo
                         </p>
                       </template>
+                      <template v-if="!isPiecesTotalValid">
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor verifique a quantidade total de peças
+                        </p>
+                      </template>
                     </div>
 
                     <div
@@ -166,11 +179,11 @@
                       }"
                     >
                       <label for="simplePieceValue">Valor peça simples </label>
-                      <input
+                      <moneyInput
                         id="simplePieceValue"
                         type="text"
                         class="form-input"
-                        v-money="moneyConfig"
+                        :options="moneyConfig"
                         v-model="plan.simplePieceValue"
                       />
                       <template
@@ -193,11 +206,11 @@
                       <label for="additionalSimplePieceValue"
                         >Valor peça simples adcional</label
                       >
-                      <input
+                      <moneyInput
                         id="additionalSimplePieceValue"
                         type="text"
                         class="form-input"
-                        v-money="moneyConfig"
+                        :options="moneyConfig"
                         v-model="plan.additionalSimplePieceValue"
                       />
                       <template
@@ -218,7 +231,9 @@
                     <div
                       class="md:col-span-1"
                       :class="{
-                        'has-error': $v.plan.difficultPieceQuantity.$error,
+                        'has-error':
+                          $v.plan.difficultPieceQuantity.$error ||
+                          !isPiecesTotalValid,
                         'has-success':
                           isSubmitForm &&
                           !$v.plan.difficultPieceQuantity.$error,
@@ -242,6 +257,11 @@
                           Por favor preencha esse campo
                         </p>
                       </template>
+                      <template v-if="!isPiecesTotalValid">
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor verifique a quantidade total de peças
+                        </p>
+                      </template>
                     </div>
 
                     <div
@@ -254,11 +274,11 @@
                       <label for="difficultPieceValue"
                         >Valor peça difíceis
                       </label>
-                      <input
+                      <moneyInput
                         id="difficultPieceValue"
                         type="text"
                         class="form-input"
-                        v-money="moneyConfig"
+                        :options="moneyConfig"
                         v-model="plan.difficultPieceValue"
                       />
                       <template
@@ -284,11 +304,11 @@
                       <label for="additionalDifficultPieceValue"
                         >Valor peça difícil adcional</label
                       >
-                      <input
+                      <moneyInput
                         id="additionalDifficultPieceValue"
                         type="text"
                         class="form-input"
-                        v-money="moneyConfig"
+                        :options="moneyConfig"
                         v-model="plan.additionalDifficultPieceValue"
                       />
                       <template
@@ -340,7 +360,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, onUpdated, ref } from "vue";
+import { computed, defineEmits, onUpdated, ref, watch } from "vue";
 import {
   TransitionRoot,
   TransitionChild,
@@ -353,7 +373,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { usePlanStore } from "@/stores/usePlanStore";
 import Spinner from "@/components/core/Spinner.vue";
-
+import moneyInput from "../../components/core/input/moneyInput.vue";
 import { showMessage } from "@/utils/utils";
 
 useMeta({ title: "Cadastrar Planos" });
@@ -361,25 +381,18 @@ useMeta({ title: "Cadastrar Planos" });
 const planStore = usePlanStore();
 
 const moneyConfig = {
-  prefix: "R$ ",
-  thousands: ".",
-  decimal: ",",
-  precision: 2,
-  masked: false, // Define como `false` para manter apenas o valor numérico no modelo (sem o "R$")
+  locale: "pt-BR",
+  currency: "BRL",
+  currencyDisplay: "symbol",
+  hideCurrencySymbolOnFocus: true,
+  hideGroupingSeparatorOnFocus: true,
+  hideNegligibleDecimalDigitsOnFocus: false,
+  autoDecimalDigits: true,
+  useGrouping: true,
+  accountingSign: false,
 };
 
-const plan = ref({
-  id: props.plan.id,
-  name: props.plan.name,
-  pieceQuantity: props.plan.pieceQuantity,
-  simplePieceQuantity: props.plan.simplePieceQuantity,
-  simplePieceValue: props.plan.simplePieceValue,
-  difficultPieceQuantity: props.plan.difficultPieceQuantity,
-  difficultPieceValue: props.plan.difficultPieceValue,
-  additionalSimplePieceValue: props.plan.additionalSimplePieceValue,
-  additionalDifficultPieceValue: props.plan.additionalDifficultPieceValue,
-  isActive: props.plan.isActive,
-});
+const plan = ref({ ...props.plan });
 
 const loading = ref(false);
 
@@ -398,6 +411,22 @@ const show = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
+// Tratando a msg de erro gerada pelo back
+const erroMsg = ref({
+  message: null,
+});
+
+const hasErrorMsg = computed(() => {
+  return erroMsg.value.message !== null;
+});
+
+const isPiecesTotalValid = computed(() => {
+  const totalPieces = Number(plan.value.pieceQuantity);
+  const simplePieces = Number(plan.value.simplePieceQuantity);
+  const difficultPieces = Number(plan.value.difficultPieceQuantity);
+  return totalPieces === simplePieces + difficultPieces;
+});
+
 const isSubmitForm = ref(false);
 
 const isActive = computed({
@@ -406,11 +435,9 @@ const isActive = computed({
 });
 
 const customRequired = (value) => {
-  // Verifica se o valor não é "R$ 0,00"
-  if (typeof value === "string" && value.trim() !== "R$ 0,00") {
+  if (value) {
     return true;
   }
-  // Se for "R$ 0,00", considera o campo não preenchido
   return false;
 };
 
@@ -429,20 +456,12 @@ const rules = {
 
 const $v = useVuelidate(rules, { plan });
 
-onUpdated(() => {
-  plan.value = {
-    id: props.plan.id,
-    name: props.plan.name,
-    pieceQuantity: props.plan.pieceQuantity,
-    simplePieceQuantity: props.plan.simplePieceQuantity,
-    simplePieceValue: props.plan.simplePieceValue,
-    difficultPieceQuantity: props.plan.difficultPieceQuantity,
-    difficultPieceValue: props.plan.difficultPieceValue,
-    additionalSimplePieceValue: props.plan.additionalSimplePieceValue,
-    additionalDifficultPieceValue: props.plan.additionalDifficultPieceValue,
-    isActive: props.plan.isActive,
-  };
-});
+watch(
+  () => props.plan,
+  (newPlan) => {
+    Object.assign(plan.value, newPlan);
+  }
+);
 
 const submitForm = async () => {
   isSubmitForm.value = true;
@@ -455,39 +474,31 @@ const submitForm = async () => {
   try {
     loading.value = true;
     if (plan.value.id) {
-      console.log("atualizar");
-      const userUpdated = await userStore.updateUser(user.value, user.value.id);
-      if (userUpdated.erroMsg) {
-        console.log("entrou erro");
-        showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
-        erroMsgEmail.value.message = userUpdated.erroMsg.messageEmail;
-        erroMsgCPF.value.message = userUpdated.erroMsg.messageCPF;
+      console.log(plan.value);
+      const planUpdated = await planStore.updatePlan(plan.value, plan.value.id);
+      if (planUpdated.erroMsg) {
+        showMessage(planUpdated.erroMsg.message, "#FFF", "error", "danger");
+        erroMsg.value.message = planUpdated.erroMsg.message;
         loading.value = false;
         return;
       }
-      await userStore.updateAddress(address.value, address.value.id);
-      showMessage("Usuário alterado com sucesso!", "#fff");
+      showMessage("Plano alterado com sucesso!", "#fff");
       loading.value = false;
-      userStore.getUsers();
+      planStore.getPlans();
       closeModal();
     } else {
       // Criando o plano
-      console.log(plan.value);
       const planCreated = await planStore.createPlan(plan.value);
       if (planCreated.erroMsg) {
-        showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
-        erroMsgEmail.value.message = userCreated.erroMsg.messageEmail;
-        erroMsgCPF.value.message = userCreated.erroMsg.messageCPF;
+        showMessage(planCreated.erroMsg.message, "#FFF", "error", "danger");
+        erroMsg.value.message = planCreated.erroMsg.message;
         loading.value = false;
         return;
       }
       // Criando o endereço e associando ao ID da filial
-      address.value.userId = userCreated.id;
-      console.log(address.value.userId);
-      await userStore.createAddress(address.value);
-      showMessage("Usuário cadastrado com sucesso!", "#fff");
+      showMessage("Plano cadastrado com sucesso!", "#fff");
       loading.value = false;
-      userStore.getUsers();
+      planStore.getPlans();
       closeModal();
     }
   } catch (error) {}
@@ -496,6 +507,7 @@ const submitForm = async () => {
 function closeModal() {
   show.value = false;
   isSubmitForm.value = false;
+  erroMsg.value.message = null;
   $v.value.plan.$reset();
   emit("close");
 }

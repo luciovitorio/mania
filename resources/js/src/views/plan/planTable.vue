@@ -175,7 +175,7 @@
                     <button
                       type="button"
                       v-tippy="{ content: 'Editar' }"
-                      @click="editUser(plan)"
+                      @click="editPlan(plan)"
                     >
                       <svg
                         width="24"
@@ -202,7 +202,7 @@
                   <div>
                     <button
                       type="button"
-                      @click="deleteUser(plan)"
+                      @click="deletePlan(plan)"
                       v-tippy="{ content: 'Deletar' }"
                     >
                       <svg
@@ -292,7 +292,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useMeta } from "@/composables/use-meta";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { PER_PAGE } from "@/constants";
@@ -320,6 +320,7 @@ const showModal = ref(false);
 const isLoading = ref(false);
 
 function showPlanModal() {
+  console.log("Valor de planModel antes de exibir o modal:", planModel.value);
   showModal.value = true;
 }
 //fim - chamando o modal
@@ -335,10 +336,10 @@ const DEFAULT_PLAN_OBJECT = {
   pieceQuantity: "",
   simplePieceQuantity: "",
   difficultPieceQuantity: "",
-  simplePieceValue: "",
-  difficultPieceValue: "",
-  additionalSimplePieceValue: "",
-  additionalDifficultPieceValue: "",
+  simplePieceValue: 0,
+  difficultPieceValue: 0,
+  additionalSimplePieceValue: 0,
+  additionalDifficultPieceValue: 0,
   isActive: 1,
 };
 
@@ -355,11 +356,10 @@ onMounted(() => {
   }
 });
 
-async function editUser(user) {
+async function editPlan(plan) {
   isLoading.value = true;
-  const response = await userStore.getUser(user.id);
-  userModel.value = response;
-  userAddress.value = response.address;
+  const response = await planStore.getPlan(plan.id);
+  planModel.value = response;
   isLoading.value = false;
   showPlanModal();
 }
@@ -396,10 +396,10 @@ function sortPlan(field) {
   getPlans();
 }
 
-async function deleteUser(user) {
+async function deletePlan(plan) {
   Swal.fire({
     icon: "question",
-    title: `Deseja excluir a filial ${user.name}?`,
+    title: `Deseja excluir o plano ${plan.name}?`,
     text: "Essa ação não poderá ser desfeita!",
     showCancelButton: true,
     showLoaderOnConfirm: true,
@@ -409,13 +409,10 @@ async function deleteUser(user) {
     padding: "2em",
     customClass: "sweet-alerts",
     preConfirm: () => {
-      return userStore
-        .deleteAddress(user.address.id)
+      return planStore
+        .deletePlan(plan.id)
         .then(() => {
-          userStore.deleteUser(user.id);
-        })
-        .then(() => {
-          userStore.getUsers();
+          planStore.getPlans();
           Swal.fire({
             title: "Excluído!",
             icon: "success",

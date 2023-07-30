@@ -13,9 +13,4 @@ class Clothin extends Model
     {
         return $this->belongsTo(Branch::class, 'branchId');
     }
-
-    public function rols()
-    {
-        return $this->belongsToMany(Rol::class, 'rol_clothins', 'clothinId', 'rolId');
-    }
 }

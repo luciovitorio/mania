@@ -91,7 +91,9 @@
         <!--  BEGIN TOP NAVBAR  -->
         <Header />
         <!--  END TOP NAVBAR  -->
-        <div class="p-6 animation">
+        <div
+          class="p-6 animation h-[calc(100vh-61px)] flex flex-col justify-between"
+        >
           <router-view></router-view>
           <!-- BEGIN FOOTER -->
           <Footer />

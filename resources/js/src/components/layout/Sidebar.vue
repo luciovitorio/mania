@@ -129,6 +129,7 @@
                     </div>
                   </router-link>
                 </li>
+
                 <li class="menu nav-item">
                   <button
                     type="button"
@@ -201,6 +202,7 @@
                     </ul>
                   </vue-collapsible>
                 </li>
+
                 <li class="nav-item">
                   <router-link
                     to="/planos"
@@ -217,6 +219,7 @@
                     </div>
                   </router-link>
                 </li>
+
                 <li class="nav-item">
                   <router-link
                     to="/usuarios"
@@ -249,21 +252,54 @@
                   </router-link>
                 </li>
 
-                <li class="nav-item">
-                  <router-link
-                    to="/apps/calendar"
-                    class="group"
-                    @click="toggleMobileMenu"
+                <li class="menu nav-item">
+                  <button
+                    type="button"
+                    class="nav-link group w-full"
+                    :class="{ active: activeDropdown === 'setup' }"
+                    @click="
+                      activeDropdown === 'setup'
+                        ? (activeDropdown = null)
+                        : (activeDropdown = 'setup')
+                    "
                   >
                     <div class="flex items-center">
                       <v-icon name="bi-gear-fill" />
-
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Configurações</span
                       >
                     </div>
-                  </router-link>
+                    <div
+                      class="rtl:rotate-180"
+                      :class="{ '!rotate-90': activeDropdown === 'setup' }"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9 5L15 12L9 19"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </button>
+                  <vue-collapsible :isOpen="activeDropdown === 'setup'">
+                    <ul class="sub-menu text-gray-500">
+                      <li>
+                        <router-link to="/roupas" @click="toggleMobileMenu"
+                          >Roupas</router-link
+                        >
+                      </li>
+                    </ul>
+                  </vue-collapsible>
                 </li>
               </ul>
             </li>

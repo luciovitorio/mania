@@ -15,7 +15,13 @@ export const useClothStore = defineStore("cloth", {
     },
   }),
   actions: {
-    async getClothes(url = null, search, perParge, sortField, sortDirection) {
+    async getClothes(
+      url = null,
+      search: string,
+      perParge: number,
+      sortField: string,
+      sortDirection: string
+    ) {
       this.isLoading = true;
       url = url || "/cloth";
       return await axiosClient
@@ -28,8 +34,6 @@ export const useClothStore = defineStore("cloth", {
           },
         })
         .then((response) => {
-          console.log(response);
-
           if (response) {
             this.cloth = {
               data: response.data.data,
@@ -44,63 +48,50 @@ export const useClothStore = defineStore("cloth", {
           this.data = this.isLoading = false;
         });
     },
-    // async createBranch(branch: {}) {
-    //   try {
-    //     const response = await axiosClient.post("/branch", branch);
-    //     return response.data;
-    //   } catch (error) {
-    //     if (
-    //       error.response &&
-    //       error.response.data &&
-    //       error.response.data.message
-    //     ) {
-    //       const errorMessage = error.response.data.message;
-    //       console.log(errorMessage);
-    //       return { erroMsg: errorMessage };
-    //     } else {
-    //       console.log("Erro desconhecido");
-    //     }
-    //     throw error;
-    //   }
-    // },
-    // async createAddress(address: {}) {
-    //   await axiosClient.post("/address", address);
-    // },
-    // async updateBranch(branch: {}, branchId: number) {
-    //   try {
-    //     const response = await axiosClient.put(`/branch/${branchId}`, branch);
-    //     return response.data;
-    //   } catch (error) {
-    //     if (
-    //       error.response &&
-    //       error.response.data &&
-    //       error.response.data.message
-    //     ) {
-    //       const errorMessage = error.response.data.message;
-    //       return { erroMsg: errorMessage };
-    //     } else {
-    //       console.log("Erro desconhecido");
-    //     }
-    //     throw error;
-    //   }
-    // },
-    // async updateAddress(address: {}, addressId: number) {
-    //   try {
-    //     await axiosClient.put(`/address/${addressId}`, address);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // },
-    // async deleteBranch(id: number) {
-    //   await axiosClient.delete(`/branch/${id}`);
-    // },
-    // async deleteAddress(id: number) {
-    //   await axiosClient.delete(`/address/${id}`);
-    // },
-    // async getBranche(id: number) {
-    //   const response = await axiosClient.get(`/branch/${id}`);
-    //   return response.data;
-    // },
+    async createCloth(cloth: {}) {
+      try {
+        const response = await axiosClient.post("/cloth", cloth);
+        return response.data;
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message;
+          return { erroMsg: errorMessage };
+        } else {
+          console.log("Erro desconhecido");
+        }
+        throw error;
+      }
+    },
+    async updateCloth(cloth: {}, clothId: number) {
+      try {
+        const response = await axiosClient.put(`/cloth/${clothId}`, cloth);
+        return response.data;
+      } catch (error) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const errorMessage = error.response.data.message;
+          return { erroMsg: errorMessage };
+        } else {
+          console.log("Erro desconhecido");
+        }
+        throw error;
+      }
+    },
+    async deleteCloth(id: number) {
+      await axiosClient.delete(`/cloth/${id}`);
+    },
+    async getCloth(id: number) {
+      const response = await axiosClient.get(`/cloth/${id}`);
+
+      return response.data;
+    },
   },
   getters: {
     showData: (state) => state.branch.data,

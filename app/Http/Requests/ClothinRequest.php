@@ -22,7 +22,9 @@ class ClothinRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'branchId' => ['required', 'numeric'],
+            'name' => ['required', 'max:255'],
+            'type' => ['required', 'string'],
         ];
     }
 }

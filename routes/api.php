@@ -6,7 +6,6 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClothController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*

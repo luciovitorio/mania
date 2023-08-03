@@ -9,6 +9,12 @@ class Clothin extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'type',
+        'branchId',
+    ];
+
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branchId');

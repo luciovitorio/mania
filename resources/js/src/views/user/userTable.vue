@@ -344,7 +344,6 @@ onMounted(() => {
   if (isUserLoggedIn()) {
     getUsers();
     getBranches();
-
     return;
   }
 });

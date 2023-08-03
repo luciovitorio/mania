@@ -9,7 +9,7 @@
           <span class="whitespace-nowrap mr-3">Por Página</span>
           <select
             id="perPage"
-            @change="getBranches(null)"
+            @change="getClothes(null)"
             v-model="perPage"
             class="appearance-none relative block w-24 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
           >
@@ -62,7 +62,7 @@
               <TableHeaderCell
                 @click="sortCloth"
                 class="border-b-2 p-2 text-left"
-                field="phone"
+                field="type"
                 :sort-field="sortField"
                 :sort-direction="sortDirection"
                 >Tipo
@@ -233,8 +233,8 @@
   <ClothModal
     v-model="showModal"
     :cloth="clothModel"
-    :address="clothAddress"
     @close="onModalClose"
+    :branch="branchList"
   />
 </template>
 
@@ -243,6 +243,7 @@ import { computed, onMounted, ref } from "vue";
 import { useMeta } from "@/composables/use-meta";
 import { useClothStore } from "@/stores/useClothStore";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useBranchStore } from "@/stores/useBranchStore";
 import { PER_PAGE } from "@/constants";
 import TableHeaderCell from "@/components/core/table/TableHeaderCell.vue";
 import Swal from "sweetalert2";
@@ -256,39 +257,31 @@ const showModal = ref(false);
 
 const isLoading = ref(false);
 
+const clothStore = useClothStore();
+const authStore = useAuthStore();
+const branchStore = useBranchStore();
+
 function showClothModal() {
   showModal.value = true;
 }
 //fim - chamando o modal
 
-const clothModel = ref({
+const DEFAULT_CLOTH_OBJECT = {
   id: "",
+  branchId: "",
   name: "",
-  phone: "",
-  whatsapp: "",
-  email: "",
-});
+  type: "",
+};
 
-const clothAddress = ref({
-  id: "",
-  cep: "",
-  street: "",
-  number: "",
-  complement: "",
-  district: "",
-  city: "",
-  state: "",
-});
+const clothModel = ref({ ...DEFAULT_CLOTH_OBJECT });
 
 const { title, buttonTitle } = defineProps({
   title: String,
   buttonTitle: String,
 });
 
-const clothStore = useClothStore();
-const authStore = useAuthStore();
-
 const clothList = computed(() => clothStore.$state.cloth.data);
+const branchList = computed(() => branchStore.$state.branch.data);
 
 const sortField = ref("id");
 const sortDirection = ref("desc");
@@ -299,6 +292,7 @@ onMounted(() => {
   authStore.getUser;
   if (isUserLoggedIn()) {
     getClothes();
+    getBranches();
     return;
   }
 });
@@ -308,6 +302,16 @@ const getStatusClass = (type) =>
 
 function getClothes(url = null) {
   clothStore.getClothes(
+    url,
+    search.value,
+    perPage.value,
+    sortField.value,
+    sortDirection.value
+  );
+}
+
+function getBranches(url = null) {
+  branchStore.getBranches(
     url,
     search.value,
     perPage.value,
@@ -340,9 +344,8 @@ function sortCloth(field) {
 
 async function editCloth(cloth) {
   isLoading.value = true;
-  const response = await branchStore.getCloth(branch.id);
+  const response = await clothStore.getCloth(cloth.id);
   clothModel.value = response;
-  clothAddress.value = response.address;
   isLoading.value = false;
   showClothModal();
 }
@@ -360,13 +363,10 @@ async function deleteCloth(cloth) {
     padding: "2em",
     customClass: "sweet-alerts",
     preConfirm: () => {
-      return branchStore
-        .deleteAddress(branch.address.id)
+      return clothStore
+        .deleteCloth(cloth.id)
         .then(() => {
-          branchStore.deleteBranch(branch.id);
-        })
-        .then(() => {
-          branchStore.getBranches();
+          clothStore.getClothes();
           Swal.fire({
             title: "Excluído!",
             icon: "success",
@@ -385,8 +385,7 @@ async function deleteCloth(cloth) {
 }
 
 function onModalClose() {
-  branchModel.value = {};
-  branchAddress.value = {};
+  clothModel.value = {};
 }
 
 function isUserLoggedIn() {

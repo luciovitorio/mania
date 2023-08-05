@@ -88,6 +88,15 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: "/clientes",
+    name: "clients",
+    component: () =>
+      import(/* webpackChunkName: "analytics" */ "../views/client/index.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/:pathMatch(.*)",
     name: "notfound",
     component: () =>

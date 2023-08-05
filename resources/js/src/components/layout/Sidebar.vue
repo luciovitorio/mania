@@ -12,13 +12,13 @@
               alt=""
             />
             <span
-              class="text-2xl ltr:ml-1.5 rtl:mr-1.5 font-semibold align-middle lg:inline dark:text-white-light"
+              class="text-2xl ltr:ml-1.5 font-semibold align-middle lg:inline dark:text-white-light"
               >Mania - CRM</span
             >
           </router-link>
           <a
             href="javascript:;"
-            class="collapse-icon w-8 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 rtl:rotate-180 hover:text-primary"
+            class="collapse-icon w-8 h-8 rounded-full flex items-center hover:bg-gray-500/10 dark:hover:bg-dark-light/10 dark:text-white-light transition duration-300 hover:text-primary"
             @click="store.toggleSidebar()"
           >
             <svg
@@ -78,7 +78,7 @@
                     <div class="flex items-center">
                       <v-icon name="md-dashboard-round" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Dashboard</span
                       >
                     </div>
@@ -86,14 +86,14 @@
                 </li>
                 <li class="nav-item">
                   <router-link
-                    to="/apps/chat"
+                    to="/clientes"
                     class="group"
                     @click="toggleMobileMenu"
                   >
                     <div class="flex items-center">
                       <v-icon name="fa-hands-helping" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Clientes</span
                       >
                     </div>
@@ -108,7 +108,7 @@
                     <div class="flex items-center">
                       <v-icon name="gi-box-unpacking" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Operação</span
                       >
                     </div>
@@ -123,7 +123,7 @@
                     <div class="flex items-center">
                       <v-icon name="fa-truck" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Entregas/Coleta</span
                       >
                     </div>
@@ -144,12 +144,12 @@
                     <div class="flex items-center">
                       <v-icon name="ri-money-dollar-box-fill" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Financeiro</span
                       >
                     </div>
                     <div
-                      class="rtl:rotate-180"
+                      class=""
                       :class="{ '!rotate-90': activeDropdown === 'invoice' }"
                     >
                       <svg
@@ -213,7 +213,7 @@
                       <v-icon name="fa-calendar-alt" />
 
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Planos</span
                       >
                     </div>
@@ -229,7 +229,7 @@
                     <div class="flex items-center">
                       <v-icon name="fa-users" />
                       <span
-                        class="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
                         >Usuários</span
                       >
                     </div>
@@ -271,7 +271,7 @@
                       >
                     </div>
                     <div
-                      class="rtl:rotate-180"
+                      class=""
                       :class="{ '!rotate-90': activeDropdown === 'setup' }"
                     >
                       <svg

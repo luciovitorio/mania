@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import axiosClient from "../axios";
 
-export const usePlanStore = defineStore("plan", {
+export const useClientStore = defineStore("client", {
   state: () => ({
+    isEdit: false,
     isLoading: false,
-    plan: {
+    client: {
       data: [],
       links: [],
       from: null,
@@ -15,7 +16,7 @@ export const usePlanStore = defineStore("plan", {
     },
   }),
   actions: {
-    async getPlans(
+    async getClients(
       url = null,
       search: string,
       perParge: number,
@@ -23,7 +24,7 @@ export const usePlanStore = defineStore("plan", {
       sortDirection: string
     ) {
       this.isLoading = true;
-      url = url || "/plan";
+      url = url || "/client";
       return await axiosClient
         .get(url, {
           params: {
@@ -35,7 +36,7 @@ export const usePlanStore = defineStore("plan", {
         })
         .then((response) => {
           if (response) {
-            this.plan = {
+            this.client = {
               data: response.data.data,
               links: response.data.meta.links,
               total: response.data.meta.total,
@@ -49,10 +50,9 @@ export const usePlanStore = defineStore("plan", {
           this.data = this.isLoading = false;
         });
     },
-    async createPlan(plan: {}) {
-      console.log(plan);
+    async createClient(client: {}) {
       try {
-        const response = await axiosClient.post("/plan", plan);
+        const response = await axiosClient.post("/client", client);
         return response.data;
       } catch (error) {
         if (error.response.data) {
@@ -63,9 +63,12 @@ export const usePlanStore = defineStore("plan", {
         throw error;
       }
     },
-    async updatePlan(plan: {}, planId: number) {
+    async createAddress(address: {}) {
+      await axiosClient.post("/address", address);
+    },
+    async updateClient(client: {}, clientId: number) {
       try {
-        const response = await axiosClient.put(`/plan/${planId}`, plan);
+        const response = await axiosClient.put(`/client/${clientId}`, client);
         return response.data;
       } catch (error) {
         if (error.response.data) {
@@ -76,11 +79,22 @@ export const usePlanStore = defineStore("plan", {
         throw error;
       }
     },
-    async deletePlan(id: number) {
-      await axiosClient.delete(`/plan/${id}`);
+    async updateAddress(address: {}, addressId: number) {
+      try {
+        await axiosClient.put(`/address/${addressId}`, address);
+      } catch (error) {
+        console.log(error);
+      }
     },
-    async getPlan(id: number) {
-      const response = await axiosClient.get(`/plan/${id}`);
+    async deleteClient(id: number) {
+      await axiosClient.delete(`/client/${id}`);
+    },
+    async deleteAddress(id: number) {
+      await axiosClient.delete(`/address/${id}`);
+    },
+    async getClient(id: number) {
+      const response = await axiosClient.get(`/client/${id}`);
+      console.log(response.data);
 
       return response.data;
     },

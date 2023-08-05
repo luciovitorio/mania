@@ -33,9 +33,9 @@
                   class="text-lg font-bold bg-[#fbfbfb] dark:bg-[#121c2c] ltr:pl-5 rtl:pr-5 py-3 ltr:pr-[50px] rtl:pl-[50px]"
                 >
                   {{
-                    user.id
-                      ? `Atualizar Usuário: "${props.user.name}"`
-                      : "Cadastrar novo Usuário"
+                    client.id
+                      ? `Atualizar Cliente: "${props.client.name}"`
+                      : "Cadastrar novo Cliente"
                   }}
                 </header>
                 <button
@@ -69,8 +69,8 @@
                     <div
                       class="md:col-span-2"
                       :class="{
-                        'has-error': $v.user.name.$error,
-                        'has-success': isSubmitForm && !$v.user.name.$error,
+                        'has-error': $v.client.name.$error,
+                        'has-success': isSubmitForm && !$v.client.name.$error,
                       }"
                     >
                       <label for="name">Nome</label>
@@ -78,9 +78,9 @@
                         id="name"
                         type="text"
                         class="form-input"
-                        v-model="user.name"
+                        v-model="client.name"
                       />
-                      <template v-if="isSubmitForm && $v.user.name.$error">
+                      <template v-if="isSubmitForm && $v.client.name.$error">
                         <p class="text-danger mt-1 text-sm">
                           Por favor preencha esse campo
                         </p>
@@ -90,13 +90,14 @@
                     <div
                       class="col-span-1"
                       :class="{
-                        'has-error': $v.user.branchId.$error,
-                        'has-success': isSubmitForm && !$v.user.branchId.$error,
+                        'has-error': $v.client.branchId.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.branchId.$error,
                       }"
                     >
                       <label>Selecione uma filial</label>
                       <select
-                        v-model="user.branchId"
+                        v-model="client.branchId"
                         class="form-select text-white-dark"
                       >
                         <option value="" disabled>Filiais</option>
@@ -108,7 +109,9 @@
                           {{ branch.name }}
                         </option>
                       </select>
-                      <template v-if="isSubmitForm && $v.user.branchId.$error">
+                      <template
+                        v-if="isSubmitForm && $v.client.branchId.$error"
+                      >
                         <p class="text-danger mt-1 text-sm">
                           Selecione uma opção
                         </p>
@@ -138,12 +141,16 @@
                     </div>
                   </div>
 
-                  <!-- EMAIL, CPF E DATA NASC -->
+                  <!-- EMAIL, PLANO, CPF E DATA NASC -->
                   <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
                     <div
-                      class="col-span-2"
+                      class="col-span-1"
                       :class="{
-                        'has-error': $v.user.email.$error || hasErrorEmail,
+                        'has-success':
+                          isSubmitForm &&
+                          !$v.client.email.$error &&
+                          !hasErrorEmail,
+                        'has-error': $v.client.email.$error || hasErrorEmail,
                       }"
                     >
                       <label for="email">E-mail</label>
@@ -151,9 +158,9 @@
                         id="email"
                         type="email"
                         class="form-input"
-                        v-model="user.email"
+                        v-model="client.email"
                       />
-                      <template v-if="isSubmitForm && $v.user.email.$error">
+                      <template v-if="isSubmitForm && $v.client.email.$error">
                         <p class="text-danger mt-1 text-sm">
                           Preencha com um e-mail válido
                         </p>
@@ -164,11 +171,12 @@
                         </p>
                       </template>
                     </div>
+
                     <div
                       :class="{
-                        'has-error': $v.user.cpf.$error || hasErrorCPF,
+                        'has-error': $v.client.cpf.$error || hasErrorCPF,
                         'has-success':
-                          isSubmitForm && !$v.user.cpf.$error && !hasErrorCPF,
+                          isSubmitForm && !$v.client.cpf.$error && !hasErrorCPF,
                       }"
                     >
                       <label for="cpf">CPF</label>
@@ -179,7 +187,7 @@
                         v-model="cpf"
                         v-maska="'###.###.###-##'"
                       />
-                      <template v-if="isSubmitForm && $v.user.cpf.$error">
+                      <template v-if="isSubmitForm && $v.client.cpf.$error">
                         <p class="text-danger mt-1 text-sm">
                           Por favor Preencha esse campo
                         </p>
@@ -190,108 +198,123 @@
                         </p>
                       </template>
                     </div>
-                    <div>
-                      <label for="dtNasc">Data de Nascimento</label>
-                      <input
-                        id="dtNasc"
-                        type="date"
-                        class="form-input"
-                        v-model="user.dateOfBirth"
-                      />
-                    </div>
-                  </div>
-
-                  <!-- SENHA, CONFIRMAR SENHA, PERFIL E ATIVO -->
-                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-                    <div
-                      class="col-span-1"
-                      :class="{
-                        'has-error':
-                          $v.user.password.$error || !arePasswordsMatching,
-                        'has-success':
-                          isSubmitForm &&
-                          !$v.user.password.$error &&
-                          arePasswordsMatching,
-                      }"
-                    >
-                      <label for="password">Senha</label>
-                      <input
-                        id="password"
-                        type="password"
-                        class="form-input"
-                        v-model="user.password"
-                      />
-                      <template v-if="isSubmitForm && $v.user.password.$error">
-                        <p class="text-danger mt-1 text-sm">
-                          Por favor, preencha esse campo
-                        </p>
-                      </template>
-                      <template v-if="isSubmitForm && !arePasswordsMatching">
-                        <p class="text-danger mt-1 text-sm">
-                          As senhas não coincidem
-                        </p>
-                      </template>
-                    </div>
 
                     <div
                       class="col-span-1"
                       :class="{
-                        'has-error':
-                          $v.user.confirm_password.$error ||
-                          !arePasswordsMatching,
-                        'has-success':
-                          isSubmitForm &&
-                          !$v.user.password.$error &&
-                          arePasswordsMatching,
+                        'has-error': $v.client.planId.$error,
+                        'has-success': isSubmitForm && !$v.client.planId.$error,
                       }"
                     >
-                      <label for="confirm_password">Confirmar Senha</label>
-                      <input
-                        id="confirm_password"
-                        type="password"
-                        class="form-input"
-                        v-model="user.confirm_password"
-                      />
-                      <template
-                        v-if="isSubmitForm && $v.user.confirm_password.$error"
-                      >
-                        <p class="text-danger mt-1 text-sm">
-                          Por favor, preencha esse campo
-                        </p>
-                      </template>
-                      <template v-if="isSubmitForm && !arePasswordsMatching">
-                        <p class="text-danger mt-1 text-sm">
-                          As senhas não coincidem
-                        </p>
-                      </template>
-                    </div>
-
-                    <div
-                      class="col-span-1"
-                      :class="{
-                        'has-error': $v.user.profile.$error,
-                        'has-success': isSubmitForm && !$v.user.profile.$error,
-                      }"
-                    >
-                      <label for="profile">Perfil do Usuário</label>
+                      <label>Selecione um plano</label>
                       <select
-                        v-model="user.profile"
+                        v-model="client.planId"
                         class="form-select text-white-dark"
                       >
-                        <option value="" disabled>Selecione o Perfil</option>
-                        <option value="ADMIN">Administrador</option>
-                        <option value="SUPERVISAO">Supervisão</option>
-                        <option value="PASSADEIRA">Passadeira</option>
+                        <option value="" disabled>Planos</option>
+                        <option
+                          v-for="plan in props.plan"
+                          :value="plan.id"
+                          :key="plan.id"
+                        >
+                          {{ plan.name }}
+                        </option>
                       </select>
-                      <template v-if="isSubmitForm && $v.user.profile.$error">
+                      <template v-if="isSubmitForm && $v.client.planId.$error">
                         <p class="text-danger mt-1 text-sm">
                           Selecione uma opção
                         </p>
                       </template>
                     </div>
 
+                    <div
+                      :class="{
+                        'has-success': isSubmitForm,
+                      }"
+                    >
+                      <label for="dtNasc">Data de Nascimento</label>
+                      <input
+                        id="dtNasc"
+                        type="date"
+                        class="form-input"
+                        v-model="client.dateOfBirth"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- RG, TELEFONE RESIDENCIAL, TELEFONE CELULAR, ATIVO -->
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5 pb-4">
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.rg.$error,
+                        'has-success': isSubmitForm && !$v.client.rg.$error,
+                      }"
+                    >
+                      <label for="rg">RG</label>
+                      <input
+                        id="rg"
+                        type="text"
+                        class="form-input"
+                        v-model="client.rg"
+                      />
+                      <template v-if="isSubmitForm && $v.client.rg.$error">
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor, preencha esse campo
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.rg.$error,
+                        'has-success': isSubmitForm && !$v.client.rg.$error,
+                      }"
+                    >
+                      <label for="homePhone">Telefone Residencial</label>
+                      <input
+                        id="homePhone"
+                        type="text"
+                        class="form-input"
+                        v-model="homePhone"
+                        v-maska="'(##) ####-####'"
+                      />
+                      <template
+                        v-if="isSubmitForm && $v.client.homePhone.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor, preencha esse campo
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.rg.$error,
+                        'has-success': isSubmitForm && !$v.client.rg.$error,
+                      }"
+                    >
+                      <label for="cellPhone">Telefone Celular</label>
+                      <input
+                        id="cellPhone"
+                        type="text"
+                        class="form-input"
+                        v-model="cellPhone"
+                        v-maska="'(##) #####-####'"
+                      />
+                      <template
+                        v-if="isSubmitForm && $v.client.cellPhone.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor, preencha esse campo
+                        </p>
+                      </template>
+                    </div>
+
                     <div class="col-span-1">
-                      <label for="isActive">Usuário Ativo?</label>
+                      <label for="isActive">Cliente Ativo?</label>
                       <label
                         for="isActive"
                         class="flex items-center cursor-pointer"
@@ -306,9 +329,10 @@
                       </label>
                     </div>
                   </div>
+                  <hr />
 
                   <!-- RUA, NUMERO E COMPLEMENTO -->
-                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5 pt-4">
                     <div
                       class="md:col-span-2"
                       :class="{
@@ -350,7 +374,11 @@
                         </p>
                       </template>
                     </div>
-                    <div>
+                    <div
+                      :class="{
+                        'has-success': isSubmitForm,
+                      }"
+                    >
                       <label for="complement">Complemento</label>
                       <input
                         id="complement"
@@ -362,7 +390,7 @@
                   </div>
 
                   <!-- BAIRRO, CIDADE E UF -->
-                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5 pb-4">
                     <div
                       class="md:col-span-2"
                       :class="{
@@ -425,27 +453,242 @@
                       </template>
                     </div>
                   </div>
+                  <hr />
 
-                  <div
-                    class="grid grid-cols-1 md:grid-cols-4 gap-5"
-                    v-if="user.profile === 'PASSADEIRA'"
-                  >
+                  <!-- FREQUENCIA DE COLETA, DIA DE COLETA E HORA DA COLETA -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
                     <div
+                      class="col-span-1"
                       :class="{
-                        'has-error': $v.user.percent.$error,
-                        'has-success': isSubmitForm && !$v.user.percent.$error,
+                        'has-error': $v.client.collectionFrequency.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.collectionFrequency.$error,
                       }"
                     >
-                      <label for="percent">Comissão %</label>
+                      <label for="collectionFrequency"
+                        >Frequencia de Coleta</label
+                      >
+                      <select
+                        v-model="client.collectionFrequency"
+                        class="form-select text-white-dark"
+                      >
+                        <option value="" disabled>
+                          Selecione a frequencia
+                        </option>
+                        <option value="SEMANAL">SEMANAL</option>
+                        <option value="QUINZENAL">QUINZENA</option>
+                        <option value="MENSAL">MENSAL</option>
+                        <option value="AVULSO">AVULSO</option>
+                      </select>
+                      <template
+                        v-if="
+                          isSubmitForm && $v.client.collectionFrequency.$error
+                        "
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Selecione uma opção
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.collectionDay.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.collectionDay.$error,
+                      }"
+                    >
+                      <label for="collectionDay">Dia da Coleta</label>
+                      <select
+                        v-model="client.collectionDay"
+                        class="form-select text-white-dark"
+                      >
+                        <option value="" disabled>
+                          Selecione o dia da coleta
+                        </option>
+                        <option value="SEGUNDA">SEGUNDA</option>
+                        <option value="TERCA">TERÇA</option>
+                        <option value="QUARTA">QUARTA</option>
+                        <option value="QUINTA">QUINTA</option>
+                        <option value="SEXTA">SEXTA</option>
+                        <option value="SABADO">SÁBADO</option>
+                      </select>
+                      <template
+                        v-if="isSubmitForm && $v.client.collectionDay.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Selecione uma opção
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      :class="{
+                        'has-success': isSubmitForm,
+                      }"
+                    >
+                      <label for="collectionTime">Hora da Coleta</label>
                       <input
-                        id="percent"
+                        id="collectionTime"
+                        type="time"
+                        class="form-input"
+                        v-model="client.collectionTime"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- DIA DA ENTREGA, HORA DA ENTREGA E INÍCIO DA COLETA -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pb-4">
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.deliveryDay.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.deliveryDay.$error,
+                      }"
+                    >
+                      <label for="deliveryDay">Dia da Entrega</label>
+                      <select
+                        v-model="client.deliveryDay"
+                        class="form-select text-white-dark"
+                      >
+                        <option value="" disabled>
+                          Selecione o dia da entrega
+                        </option>
+                        <option value="SEGUNDA">SEGUNDA</option>
+                        <option value="TERCA">TERÇA</option>
+                        <option value="QUARTA">QUARTA</option>
+                        <option value="QUINTA">QUINTA</option>
+                        <option value="SEXTA">SEXTA</option>
+                        <option value="SABADO">SÁBADO</option>
+                      </select>
+                      <template
+                        v-if="isSubmitForm && $v.client.deliveryDay.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Selecione uma opção
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      :class="{
+                        'has-success': isSubmitForm,
+                      }"
+                    >
+                      <label for="deliveryTime">Hora da Entrega</label>
+                      <input
+                        id="deliveryTime"
+                        type="time"
+                        class="form-input"
+                        v-model="client.deliveryTime"
+                      />
+                    </div>
+
+                    <div
+                      :class="{
+                        'has-success': isSubmitForm,
+                      }"
+                    >
+                      <label for="collectionStart">Início da Coleta</label>
+                      <input
+                        id="collectionStart"
+                        type="date"
+                        class="form-input"
+                        v-model="client.collectionStart"
+                      />
+                    </div>
+                  </div>
+                  <hr />
+
+                  <!-- OBSERVAÇAO, TAXA ENTREGA, DIA VENCIMENTO -->
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-5 pt-4">
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.description.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.description.$error,
+                      }"
+                    >
+                      <label for="description">Observação</label>
+                      <textarea
+                        id="description"
+                        rows="3"
+                        class="form-textarea"
+                        v-model="client.description"
+                      ></textarea>
+                      <template
+                        v-if="isSubmitForm && $v.client.description.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor, preencha esse campo
+                        </p>
+                      </template>
+                    </div>
+
+                    <div class="col-span-1">
+                      <label for="deliveryFee">Taxa de entrega?</label>
+                      <label
+                        for="deliveryFee"
+                        class="flex items-center cursor-pointer"
+                      >
+                        <input
+                          id="deliveryFee"
+                          v-model="deliveryFee"
+                          type="checkbox"
+                          class="form-checkbox"
+                        />
+                        <span class="text-white-dark">Taxa de Entrega</span>
+                      </label>
+                    </div>
+
+                    <div
+                      :class="{
+                        'has-error': $v.client.deliveryAmount.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.deliveryAmount.$error,
+                      }"
+                    >
+                      <label for="deliveryAmount"
+                        >Valor da taxa de Entrega</label
+                      >
+                      <moneyInput
+                        id="deliveryAmount"
+                        type="text"
+                        class="form-input disabled:cursor-not-allowed disabled:bg-gray-200"
+                        :options="moneyConfig"
+                        v-model="client.deliveryAmount"
+                        :disabled="!deliveryFee"
+                      />
+                      <template
+                        v-if="isSubmitForm && $v.client.deliveryAmount.$error"
+                      >
+                        <p class="text-danger mt-1 text-sm">
+                          Por favor preencha esse campo
+                        </p>
+                      </template>
+                    </div>
+
+                    <div
+                      class="col-span-1"
+                      :class="{
+                        'has-error': $v.client.dueDate.$error,
+                        'has-success':
+                          isSubmitForm && !$v.client.dueDate.$error,
+                      }"
+                    >
+                      <label for="dueDate">Dia do Vencimento</label>
+                      <input
+                        id="dueDate"
                         type="number"
                         class="form-input"
-                        v-model="user.percent"
+                        v-model="client.dueDate"
                       />
-                      <template v-if="isSubmitForm && $v.user.percent.$error">
+                      <template v-if="isSubmitForm && $v.client.dueDate.$error">
                         <p class="text-danger mt-1 text-sm">
-                          Campo obrigatório para o perfil Passadeira
+                          Por favor, preencha esse campo
                         </p>
                       </template>
                     </div>
@@ -462,7 +705,7 @@
                     <button
                       type="submit"
                       class="btn btn-primary ml-4 bg-primary/90 hover:bg-primary"
-                      v-show="!user.id"
+                      v-show="!client.id"
                       @click="buttonCreate"
                     >
                       Cadastrar
@@ -470,7 +713,7 @@
                     <button
                       type="submit"
                       class="btn btn-primary ml-4 bg-primary/90 hover:bg-primary"
-                      v-show="user.id"
+                      v-show="client.id"
                       @click="buttonEdit"
                     >
                       Atualizar
@@ -487,7 +730,7 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, defineEmits, ref, watch } from "vue";
 import {
   TransitionRoot,
   TransitionChild,
@@ -498,19 +741,34 @@ import {
 import { useMeta } from "@/composables/use-meta";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, numeric } from "@vuelidate/validators";
-import { useUserStore } from "@/stores/useUserStore";
+import moneyInput from "../../components/core/input/moneyInput.vue";
+import { useClientStore } from "@/stores/useClientStore";
 import Spinner from "@/components/core/Spinner.vue";
 
 import {
   showMessage,
   removeSpecialCharacters,
   formatCEP,
+  formatPhone,
+  formatCellphone,
   formatCPF,
 } from "@/utils/utils";
 
-useMeta({ title: "Cadastrar Usuários" });
+useMeta({ title: "Cadastrar Clientes" });
 
-const userStore = useUserStore();
+const clientStore = useClientStore();
+
+const moneyConfig = {
+  locale: "pt-BR",
+  currency: "BRL",
+  currencyDisplay: "symbol",
+  hideCurrencySymbolOnFocus: true,
+  hideGroupingSeparatorOnFocus: true,
+  hideNegligibleDecimalDigitsOnFocus: false,
+  autoDecimalDigits: true,
+  useGrouping: true,
+  accountingSign: false,
+};
 
 // Buscando CEP
 const searchCep = async () => {
@@ -542,8 +800,10 @@ const searchCep = async () => {
 
 const branches = ref([...props.branch]);
 
-const user = ref({
-  ...props.user,
+const plans = ref([...props.plan]);
+
+const client = ref({
+  ...props.client,
 });
 
 const address = ref({
@@ -556,7 +816,25 @@ const formattedCEP = computed(() => {
 });
 
 const formattedCPF = computed(() => {
-  return formatCPF(user.value.cpf);
+  return formatCPF(client.value.cpf);
+});
+
+const formattedPhone = computed(() => {
+  return formatPhone(client.value.homePhone);
+});
+
+const formattedCellphone = computed(() => {
+  return formatCellphone(client.value.cellPhone);
+});
+
+const cellPhone = computed({
+  get: () => formattedCellphone.value,
+  set: (value) => (client.value.cellPhone = removeSpecialCharacters(value)),
+});
+
+const homePhone = computed({
+  get: () => formattedPhone.value,
+  set: (value) => (client.value.homePhone = removeSpecialCharacters(value)),
 });
 
 // Limpando os campos
@@ -567,17 +845,20 @@ const cep = computed({
 
 const cpf = computed({
   get: () => formattedCPF.value,
-  set: (value) => (user.value.cpf = removeSpecialCharacters(value)),
+  set: (value) => (client.value.cpf = removeSpecialCharacters(value)),
 });
 
 const loading = ref(false);
 
 const props = defineProps({
   modelValue: Boolean,
+  plan: {
+    type: Array,
+  },
   branch: {
     type: Array,
   },
-  user: {
+  client: {
     required: true,
     type: Object,
   },
@@ -595,9 +876,9 @@ const show = computed({
 });
 
 watch(
-  () => props.user,
-  (newUser) => {
-    Object.assign(user.value, newUser);
+  () => props.client,
+  (newClient) => {
+    Object.assign(client.value, newClient);
   }
 );
 
@@ -612,6 +893,13 @@ watch(
   () => props.branch,
   (newBranch) => {
     branches.value = [...newBranch];
+  }
+);
+
+watch(
+  () => props.plan,
+  (newPlan) => {
+    plans.value = [...newPlan];
   }
 );
 
@@ -633,41 +921,98 @@ const hasErrorCPF = computed(() => {
   return erroMsgCPF.value.message !== null;
 });
 
-function isValidProfile(value) {
-  const allowedProfiles = ["ADMIN", "SUPERVISAO", "PASSADEIRA"];
-  return allowedProfiles.includes(value);
+function isValidCollectionFrequency(value) {
+  const allowedCollectionFrequency = [
+    "SEMANAL",
+    "QUINZENAL",
+    "MENSAL",
+    "AVULSO",
+  ];
+  return allowedCollectionFrequency.includes(value);
 }
 
-const arePasswordsMatching = computed(() => {
-  return user.value.password === user.value.confirm_password;
-});
+function isValidCollectionDay(value) {
+  const allowedCollectionDay = [
+    "SEGUNDA",
+    "TERCA",
+    "QUARTA",
+    "QUINTA",
+    "SEXTA",
+    "SABADO",
+    "DOMINGO",
+  ];
+  if (!value) {
+    return true;
+  } else {
+    return allowedCollectionDay.includes(value);
+  }
+}
+
+function isValidDeliveryDay(value) {
+  const allowedDeliveryDay = [
+    "SEGUNDA",
+    "TERCA",
+    "QUARTA",
+    "QUINTA",
+    "SEXTA",
+    "SABADO",
+    "DOMINGO",
+  ];
+  if (!value) {
+    return true;
+  } else {
+    return allowedDeliveryDay.includes(value);
+  }
+}
 
 const isActive = computed({
-  get: () => user.value.isActive === 1,
-  set: (value) => (user.value.isActive = value ? 1 : 0),
+  get: () => client.value.isActive === 1,
+  set: (value) => (client.value.isActive = value ? 1 : 0),
+});
+
+const deliveryFee = computed({
+  get: () => client.value.deliveryFee === 1,
+  set: (value) => (client.value.deliveryFee = value ? 1 : 0),
 });
 
 function isValidCPF(value) {
   const cpfRegex = /^\d{11}$/;
-  return cpfRegex.test(value);
+  if (!value) {
+    return true;
+  } else {
+    return cpfRegex.test(value);
+  }
+}
+
+function isDeliveryFee(value) {
+  if (!client.value.deliveryFee) {
+    return true;
+  } else {
+    return value;
+  }
 }
 
 const rules = {
-  user: {
+  client: {
     branchId: { required },
+    planId: { required },
     name: { required },
-    email: { email },
-    password: { required },
-    confirm_password: { required },
-    sameAsPassword: arePasswordsMatching,
-    cpf: { required, isValidCPF },
+    cpf: { isValidCPF },
+    rg: "",
     dateOfBirth: "",
-    profile: { required, isValidProfile },
-    percent: {
-      required: (value) =>
-        user.value.profile === "PASSADEIRA" ? !!value : true,
-      numeric,
-    },
+    email: { email },
+    homePhone: "",
+    cellPhone: "",
+    collectionFrequency: { isValidCollectionFrequency },
+    collectionDay: { isValidCollectionDay },
+    collectionTime: "",
+    deliveryDay: { isValidDeliveryDay },
+    deliveryTime: "",
+    collectionStart: "",
+    description: "",
+    deliveryFee: "",
+    deliveryAmount: { isDeliveryFee },
+    dueDate: "",
   },
   address: {
     cep: { required },
@@ -680,50 +1025,53 @@ const rules = {
   },
 };
 
-const $v = useVuelidate(rules, { user, address });
+const $v = useVuelidate(rules, { client, address });
 
 const submitForm = async () => {
   isSubmitForm.value = true;
-  $v.value.user.$touch();
+  $v.value.client.$touch();
   $v.value.address.$touch();
-  if ($v.value.user.$invalid || $v.value.address.$invalid) {
+  if ($v.value.client.$invalid || $v.value.address.$invalid) {
     return false;
   }
 
   // Chamando a action no meu useUserStore
   try {
     loading.value = true;
-    if (user.value.id) {
-      const userUpdated = await userStore.updateUser(user.value, user.value.id);
-      if (userUpdated.erroMsg) {
+    if (client.value.id) {
+      const clientUpdated = await clientStore.updateClient(
+        client.value,
+        client.value.id
+      );
+      if (clientUpdated.erroMsg) {
         showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
-        erroMsgEmail.value.message = userUpdated.erroMsg.messageEmail;
-        erroMsgCPF.value.message = userUpdated.erroMsg.messageCPF;
+        erroMsgEmail.value.message = clientUpdated.erroMsg.messageEmail;
+        erroMsgCPF.value.message = clientUpdated.erroMsg.messageCPF;
         loading.value = false;
         return;
       }
-      await userStore.updateAddress(address.value, address.value.id);
+      await clientStore.updateAddress(address.value, address.value.id);
       showMessage("Usuário alterado com sucesso!", "#fff");
       loading.value = false;
-      userStore.getUsers();
+      clientStore.getClients();
       closeModal();
     } else {
       // Criando o usuario e retornando o ID
-      const userCreated = await userStore.createUser(user.value, address.value);
-      if (userCreated.erroMsg) {
-        console.log(userCreated.erroMsg);
+      const clientCreated = await clientStore.createClient(client.value);
+      if (clientCreated.erroMsg) {
+        console.log(clientCreated.erroMsg);
         showMessage("Email ou CPF já cadastrado", "#FFF", "error", "danger");
-        erroMsgEmail.value.message = userCreated.erroMsg.messageEmail;
-        erroMsgCPF.value.message = userCreated.erroMsg.messageCPF;
+        erroMsgEmail.value.message = clientCreated.erroMsg.messageEmail;
+        erroMsgCPF.value.message = clientCreated.erroMsg.messageCPF;
         loading.value = false;
         return;
       }
       // Criando o endereço e associando ao ID da filial
-      address.value.userId = userCreated.id;
-      await userStore.createAddress(address.value);
-      showMessage("Usuário cadastrado com sucesso!", "#fff");
+      address.value.clientId = clientCreated.id;
+      await clientStore.createAddress(address.value);
+      showMessage("Cliente cadastrado com sucesso!", "#fff");
       loading.value = false;
-      userStore.getUsers();
+      clientStore.getClients();
       closeModal();
     }
   } catch (error) {}
@@ -732,7 +1080,7 @@ const submitForm = async () => {
 function closeModal() {
   show.value = false;
   isSubmitForm.value = false;
-  $v.value.user.$reset();
+  $v.value.client.$reset();
   $v.value.address.$reset();
   erroMsgEmail.value.message = null;
   erroMsgCPF.value.message = null;

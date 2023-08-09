@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rol_clothins', function (Blueprint $table) {
+        Schema::create('system__infos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rolId')->references('id')->on('rols');
-            $table->foreignId('clothinId')->references('id')->on('clothins');
+            $table->string('store_name');
+            $table->string('whatsapp_business_id');
+            $table->string('phone_number_id');
+            $table->string('phone_number');
+            $table->string('facebook_token');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rol_clothins');
+        Schema::dropIfExists('system__infos');
     }
 };

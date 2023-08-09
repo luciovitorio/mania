@@ -41,7 +41,7 @@ class ClientSeeder extends Seeder
             'dateOfBirth' => $dateOfBirth,
             'email' => 'michelle.oliveiraimenes@gmail.com',
             'homePhone' => '2121797952',
-            'cellPhone' => '21982760000',
+            'cellPhone' => '21980376882',
             'collectionFrequency' => 'SEMANAL',
             'collectionDay' => 'QUARTA',
             'collectionTime' => '09:00',
@@ -58,6 +58,7 @@ class ClientSeeder extends Seeder
             'planId' => $planId02,
             'branchId' => $branchId,
             'name' => 'Lucia AVULSO',
+            'cellPhone' => '21980376882',
             'collectionFrequency' => 'AVULSO',
             'deliveryAmount' => 10.00,
             'isActive' => true

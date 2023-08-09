@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
         ClientSeeder::class,
         RolsSeeder::class,
         RolsClothingSeeder::class,
-        AddressSeeder::class
+        AddressSeeder::class,
+        SystemInfoSeeder::class
     ];
 
     /**
@@ -31,5 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AddressSeeder::class);
         $this->call(RolsSeeder::class);
         $this->call(RolsClothingSeeder::class);
+        $this->call(SystemInfoSeeder::class);
     }
 }

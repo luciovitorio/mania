@@ -6,6 +6,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ClothController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\RolController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,9 @@ Route::middleware(['auth:sanctum', 'admin'])
         Route::resource('/plan', PlanController::class);
         Route::resource('/cloth', ClothController::class);
         Route::resource('/client', ClientController::class);
+        Route::resource('/rol', RolController::class);
+        Route::post('/send', [RolController::class, 'sendWzp']);
+        Route::get('/erol/{uuid}', [RolController::class, 'showForm']);
     });
 
 

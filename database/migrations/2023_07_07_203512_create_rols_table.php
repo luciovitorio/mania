@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rols', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->id();
             $table->foreignId('clientId')->references('id')->on('clients');
             $table->foreignId('userId')->references('id')->on('users');
-            $table->date('entryDate');
+            $table->uuid('link');
+            $table->dateTime('finishedAt')->nullable();
             $table->boolean('isHanger')->default(false);
             $table->enum('status', ['INICIO', 'ENVIADO', 'ACEITE', 'PRODUCAO', 'ENTREGA', 'FINALIZADA'])->default('INICIO');
-            $table->date('deliveryDate')->nullable();
-            $table->date('productionStartDate')->nullable();
+            $table->dateTime('deliveryDate')->nullable();
+            $table->dateTime('productionStartDate')->nullable();
+            $table->dateTime('productionEndDate')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
         });

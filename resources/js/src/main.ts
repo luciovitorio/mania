@@ -32,6 +32,10 @@ import {
   FaBuilding,
   BiSortDownAlt,
   BiSortUp,
+  BiClipboard2PlusFill,
+  RiMailSendLine,
+  CoPencil,
+  CoTrash,
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -52,7 +56,11 @@ addIcons(
   BiPlusCircle,
   FaBuilding,
   BiSortDownAlt,
-  BiSortUp
+  BiSortUp,
+  BiClipboard2PlusFill,
+  RiMailSendLine,
+  CoPencil,
+  CoTrash
 );
 
 app.component("v-icon", OhVueIcon);

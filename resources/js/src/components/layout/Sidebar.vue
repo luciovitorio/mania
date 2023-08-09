@@ -86,6 +86,21 @@
                 </li>
                 <li class="nav-item">
                   <router-link
+                    to="/rol"
+                    class="group"
+                    @click="toggleMobileMenu"
+                  >
+                    <div class="flex items-center">
+                      <v-icon name="bi-clipboard2-plus-fill" />
+                      <span
+                        class="ltr:pl-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark"
+                        >Gerar ROL</span
+                      >
+                    </div>
+                  </router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link
                     to="/clientes"
                     class="group"
                     @click="toggleMobileMenu"

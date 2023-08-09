@@ -15,12 +15,12 @@ class RolsClothingSeeder extends Seeder
     public function run(): void
     {
         $rolId1 = DB::table('rols')
-            ->where('id', '83067b4e-e067-4e94-875f-5b05881df294')
+            ->where('id', '1')
             ->first()
             ->id;
 
         $rolId2 = DB::table('rols')
-            ->where('id', '3596ae1a-ea6f-4621-b448-d2a519767688')
+            ->where('id', '2')
             ->first()
             ->id;
 

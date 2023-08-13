@@ -54,6 +54,10 @@ class RolController extends Controller
         return RolListResource::collection($rols);
     }
 
+    public function showForm()
+    {
+    }
+
     /**
      * Store a newly created resource in storage.
      */

@@ -6,6 +6,7 @@ export const useClientStore = defineStore("client", {
     isEdit: false,
     isLoading: false,
     client: {
+      token: sessionStorage.getItem("CLIENT_TOKEN"),
       data: [],
       links: [],
       from: null,
@@ -16,6 +17,20 @@ export const useClientStore = defineStore("client", {
     },
   }),
   actions: {
+    async login({ cpf }) {
+      return await axiosClient
+        .post("/client/login", { cpf })
+        .then(({ data }) => {
+          this.client.data = data.client;
+          this.client.token = data.token;
+          if (data.token) {
+            sessionStorage.setItem("CLIENT_TOKEN", data.token);
+          } else {
+            sessionStorage.removeItem("CLIENT_TOKEN");
+          }
+          return data;
+        });
+    },
     async getClients(
       url = null,
       search: string,

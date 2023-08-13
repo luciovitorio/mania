@@ -41,6 +41,11 @@ class Client extends Model
         return $this->hasOne(Address::class, 'clientId');
     }
 
+    public function rol()
+    {
+        return $this->hasOne(Rol::class, 'clientId');
+    }
+
     public function plan()
     {
         return $this->belongsTo(Plan::class, 'planId');

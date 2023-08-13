@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { useAppStore } from "../stores/index";
 import { useAuthStore } from "../stores/useAuthStore";
+import { useClientStore } from "../stores/useClientStore";
 import appSetting from "../app-setting";
 
 import HomeView from "../views/index.vue";
@@ -97,12 +98,34 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
-    path: "/rol",
+    path: "/erol",
     name: "rol",
     component: () =>
       import(/* webpackChunkName: "analytics" */ "../views/rol/index.vue"),
     meta: {
       requiresAuth: true,
+    },
+  },
+  {
+    path: "/erol/:uuid",
+    name: "clientForm",
+    component: () =>
+      import(/* webpackChunkName: "analytics" */ "../views/rol/clientForm.vue"),
+    meta: {
+      layout: "auth",
+      requiresClientAuth: true,
+    },
+  },
+  {
+    path: "/clientes/login",
+    name: "clientLogin",
+    component: () =>
+      import(
+        /* webpackChunkName: "analytics" */ "../views/client/clientLogin.vue"
+      ),
+    meta: {
+      layout: "auth",
+      requiresClientForm: true,
     },
   },
   {
@@ -132,12 +155,21 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const store = useAppStore();
   const authStore = useAuthStore();
+  const clientStore = useClientStore();
 
   if (to?.meta?.requiresAuth && !authStore.$state.user.token) {
     next({ name: "login" });
     return;
   } else if (to?.meta?.requiresGuest && authStore.$state.user.token) {
     next({ name: "dashboard" });
+    return;
+  }
+
+  if (to?.meta?.requiresClientAuth && !clientStore.$state.client.token) {
+    next({ name: "clientLogin" });
+    return;
+  } else if (to?.meta?.requiresClientForm && clientStore.$state.client.token) {
+    next({ name: "clientForm" });
     return;
   }
 

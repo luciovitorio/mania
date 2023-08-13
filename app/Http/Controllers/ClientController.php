@@ -7,6 +7,9 @@ use App\Http\Requests\ClientRequest;
 use App\Http\Resources\ClientListResource;
 use App\Http\Resources\ClientResource;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Controller
 {
@@ -138,5 +141,49 @@ class ClientController extends Controller
         $client->delete();
 
         return response()->noContent();
+    }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'cpf' => ['required', 'numeric', 'digits:11'],
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'message' => 'O CPF está incorreto!'
+            ], 422);
+        }
+
+        $cpf = $request->cpf;
+
+        // Verificar se o cliente com o CPF existe no banco de dados
+        $client = Client::where('cpf', $cpf)->first();
+
+        if (!$client) {
+            return response([
+                'message' => 'Cliente não encontrado com esse CPF!'
+            ], 404);
+        }
+
+        $token = $this->generateTokenForClient($client);
+
+        $client->load(['rol', 'address']);
+
+        return response([
+            'client' => new ClientResource($client),
+            'token' => $token,
+        ]);
+    }
+
+    private function generateTokenForClient($client)
+    {
+        // Gere um token aleatório (ou use alguma lógica para gerar um token)
+        $token = Str::random(60);
+
+        // Aqui você pode salvar o token no banco ou no storage, dependendo do que você deseja
+        // Por exemplo: $client->update(['api_token' => $token]);
+
+        return $token;
     }
 }

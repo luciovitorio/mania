@@ -86,7 +86,7 @@
                 </li>
                 <li class="nav-item">
                   <router-link
-                    to="/rol"
+                    to="/erol"
                     class="group"
                     @click="toggleMobileMenu"
                   >

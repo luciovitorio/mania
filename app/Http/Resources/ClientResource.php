@@ -38,7 +38,8 @@ class ClientResource extends JsonResource
             'dueDate' => $this->dueDate,
             'isActive' => $this->isActive,
             'branch' => new BranchResource($this->whenLoaded('branch')),
-            'address' => new AddressResource($this->whenLoaded('address'))
+            'address' => new AddressResource($this->whenLoaded('address')),
+            'rol' => new RolResource($this->whenLoaded('rol')),
         ];
     }
 }

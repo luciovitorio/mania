@@ -169,9 +169,13 @@
                 <div class="flex items-center justify-between gap-2">
                   <div>
                     <button
+                      :disabled="rol.status !== 'INICIO'"
                       type="button"
                       v-tippy="{ content: 'Editar' }"
                       @click="editRol(rol)"
+                      :class="
+                        rol.status !== 'INICIO' ? 'cursor-not-allowed ' : ''
+                      "
                     >
                       <v-icon name="co-pencil" class="text-gray-600 h-5 w-5" />
                     </button>

@@ -58,6 +58,7 @@ class ClientSeeder extends Seeder
             'planId' => $planId02,
             'branchId' => $branchId,
             'name' => 'Lucia AVULSO',
+            'cpf' => '09098059708',
             'cellPhone' => '21980376882',
             'collectionFrequency' => 'AVULSO',
             'deliveryAmount' => 10.00,

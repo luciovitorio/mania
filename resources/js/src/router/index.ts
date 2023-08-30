@@ -5,6 +5,7 @@ import { useClientStore } from "../stores/useClientStore";
 import appSetting from "../app-setting";
 
 import HomeView from "../views/index.vue";
+import { computed } from "vue";
 
 const routes: RouteRecordRaw[] = [
   // dashboard
@@ -166,6 +167,9 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to?.meta?.requiresClientAuth && !clientStore.$state.client.token) {
+    const routeParam = to.params.uuid;
+    sessionStorage.setItem("CLIENT_LINK", routeParam);
+
     next({ name: "clientLogin" });
     return;
   } else if (to?.meta?.requiresClientForm && clientStore.$state.client.token) {

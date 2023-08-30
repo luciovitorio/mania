@@ -108,8 +108,8 @@ export const useRolStore = defineStore("rol", {
     // async deleteAddress(id: number) {
     //   await axiosClient.delete(`/address/${id}`);
     // },
-    // async getUser(id: number) {
-    //   const response = await axiosClient.get(`/user/${id}`);
+    // async getRol(link: string) {
+    //   const response = await axiosClient.get(`/rol/${link}`);
     //   console.log(response.data);
     //   return response.data;
     // },

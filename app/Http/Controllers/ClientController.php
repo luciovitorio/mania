@@ -6,8 +6,12 @@ use App\Models\Client;
 use App\Http\Requests\ClientRequest;
 use App\Http\Resources\ClientListResource;
 use App\Http\Resources\ClientResource;
+use App\Models\Clothin;
+use App\Models\Rol;
+use App\Models\rolClothin;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -156,6 +160,7 @@ class ClientController extends Controller
         }
 
         $cpf = $request->cpf;
+        $link = $request->link;
 
         // Verificar se o cliente com o CPF existe no banco de dados
         $client = Client::where('cpf', $cpf)->first();
@@ -166,14 +171,55 @@ class ClientController extends Controller
             ], 404);
         }
 
+        $link = Rol::where('link', $link)
+            ->where('clientId', $client->id)
+            ->where('status', 'ENVIADO')
+            ->first();
+        if (!$link) {
+            return response([
+                'message' => 'Link inválido para o cliente!'
+            ], 404);
+        }
+
         $token = $this->generateTokenForClient($client);
 
-        $client->load(['rol', 'address']);
+        $client->load(['address', 'plan', 'rol' => function ($query) {
+            $query->where('status', '=', 'ENVIADO');
+        }]);
+        $clothes = Clothin::all();
 
         return response([
             'client' => new ClientResource($client),
             'token' => $token,
+            'clothes' => $clothes
         ]);
+    }
+
+    public function fillErol(Request $request)
+    {
+        $data = $request->all(); // Obtém os dados validados do request
+
+        $createdRecords = [];
+
+        foreach ($data as $itemData) {
+            // Cria uma nova instância do modelo rolClothin com os dados do item
+            $rolFill = rolClothin::create([
+                'clothinId' => $itemData['clothinId'],
+                'clothQuantity' => $itemData['clothQuantity'],
+                'hangQuantity' => $itemData['hangQuantity'],
+                'rolId' => $itemData['rolId'],
+            ]);
+
+            $createdRecords[] = $rolFill;
+        }
+
+        $rol = $createdRecords[0]['rolId'];
+
+        DB::table('rols')
+            ->where('id', $rol)
+            ->update(['status' => 'ACEITE']);
+
+        return $createdRecords;
     }
 
     private function generateTokenForClient($client)

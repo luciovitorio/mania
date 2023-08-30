@@ -40,6 +40,7 @@ class ClientResource extends JsonResource
             'branch' => new BranchResource($this->whenLoaded('branch')),
             'address' => new AddressResource($this->whenLoaded('address')),
             'rol' => new RolResource($this->whenLoaded('rol')),
+            'plan' => new PlanResource($this->whenLoaded('plan')),
         ];
     }
 }

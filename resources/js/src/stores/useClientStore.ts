@@ -7,6 +7,8 @@ export const useClientStore = defineStore("client", {
     isLoading: false,
     client: {
       token: sessionStorage.getItem("CLIENT_TOKEN"),
+      link: sessionStorage.getItem("CLIENT_LINK"),
+      clothes: [],
       data: [],
       links: [],
       from: null,
@@ -17,17 +19,23 @@ export const useClientStore = defineStore("client", {
     },
   }),
   actions: {
-    async login({ cpf }) {
+    async login({ cpf, link }) {
+      this.isLoading = true;
       return await axiosClient
-        .post("/client/login", { cpf })
+        .post("/client/login", { cpf, link })
         .then(({ data }) => {
+          this.client.clothes = data.clothes;
           this.client.data = data.client;
           this.client.token = data.token;
+
           if (data.token) {
+            const clothes = JSON.stringify(data.clothes);
             sessionStorage.setItem("CLIENT_TOKEN", data.token);
+            sessionStorage.setItem("CLOTHES_DATA", clothes);
           } else {
             sessionStorage.removeItem("CLIENT_TOKEN");
           }
+          this.data = this.isLoading = false;
           return data;
         });
     },
@@ -113,6 +121,17 @@ export const useClientStore = defineStore("client", {
 
       return response.data;
     },
+    async fillErol(erol: []) {
+      const response = await axiosClient.post("/client/erol", erol);
+      return response.data;
+    },
+    // async getClientWithLink(link: string) {
+    //   const response = await axiosClient.get(`/erol/getClient/${link}`);
+    //   this.client.data = response.data;
+    //   console.log(response.data);
+
+    //   return response.data;
+    // },
   },
   getters: {
     // showIsEdit: (state) => state.isEdit,

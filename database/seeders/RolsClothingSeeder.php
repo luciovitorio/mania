@@ -46,22 +46,30 @@ class RolsClothingSeeder extends Seeder
 
         rolClothin::create([
             'rolId' => $rolId1,
-            'clothinId' => $clothinId1
+            'clothinId' => $clothinId1,
+            'clothQuantity' => 2,
+            'hangQuantity' => 0
         ]);
 
         rolClothin::create([
             'rolId' => $rolId1,
-            'clothinId' => $clothinId2
+            'clothinId' => $clothinId2,
+            'clothQuantity' => 1,
+            'hangQuantity' => 1
         ]);
 
         rolClothin::create([
             'rolId' => $rolId2,
-            'clothinId' => $clothinId3
+            'clothinId' => $clothinId3,
+            'clothQuantity' => 3,
+            'hangQuantity' => 3
         ]);
 
         rolClothin::create([
             'rolId' => $rolId2,
-            'clothinId' => $clothinId4
+            'clothinId' => $clothinId4,
+            'clothQuantity' => 4,
+            'hangQuantity' => 4
         ]);
     }
 }

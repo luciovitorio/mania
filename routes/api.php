@@ -39,4 +39,5 @@ Route::middleware(['auth:sanctum', 'admin'])
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/client/login', [ClientController::class, 'login']);
-Route::get('/erol/{uuid}', [RolController::class, 'showForm']);
+Route::get('/client', [ClientController::class, 'index']);
+Route::post('/client/erol', [ClientController::class, 'fillErol']);

@@ -76,7 +76,6 @@ import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { useMeta } from "../../composables/use-meta";
 import GuestLayout from "../../components/GuestLayout.vue";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { useClientStore } from "@/stores/useClientStore";
 import { showMessage } from "../../utils/utils";
 
@@ -86,7 +85,6 @@ useMeta({ title: "Login" });
 
 const router = useRouter();
 
-const store = useAuthStore();
 const clientStore = useClientStore();
 
 let loading = ref(false);
@@ -120,8 +118,11 @@ const submitForm = () => {
 
   const cleanedCPF = removeSpecialCharacters(loginForm.value.cpf);
   loading.value = true;
+
+  const link = sessionStorage.getItem("CLIENT_LINK");
+
   clientStore
-    .login({ cpf: cleanedCPF })
+    .login({ cpf: cleanedCPF, link })
     .then((data) => {
       loading.value = false;
       showMessage("Login realizado com sucesso!", "#fff");

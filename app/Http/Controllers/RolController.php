@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Rol;
 use App\Http\Requests\RolRequest;
 use App\Http\Requests\SendWzpRequest;
+use App\Http\Resources\RolClientResource;
 use App\Http\Resources\RolListResource;
 use App\Http\Resources\RolResource;
 use App\Models\System_Info;
@@ -72,13 +73,11 @@ class RolController extends Controller
      */
     public function sendWzp(SendWzpRequest $request)
     {
-
-
         $rol = Rol::find($request->id);
 
         if ($rol) {
             $rol->status = 'ENVIADO';
-            $rol->save(); // 
+            $rol->save(); //
         }
 
         return $rol;
@@ -120,9 +119,8 @@ class RolController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Rol $rol)
+    public function show($rol)
     {
-        //
     }
 
     /**

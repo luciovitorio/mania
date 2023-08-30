@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rolId')->references('id')->on('rols');
             $table->foreignId('clothinId')->references('id')->on('clothins');
+            $table->integer('clothQuantity');
+            $table->integer('hangQuantity');
             $table->timestamps();
         });
     }

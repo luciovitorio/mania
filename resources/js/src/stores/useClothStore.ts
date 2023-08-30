@@ -94,6 +94,6 @@ export const useClothStore = defineStore("cloth", {
     },
   },
   getters: {
-    showData: (state) => state.branch.data,
+    showData: (state) => state.cloth.data,
   },
 });

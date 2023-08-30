@@ -258,6 +258,7 @@ import RolModal from "./rolModal.vue";
 import { useRolStore } from "@/stores/useRolStore";
 import { useClientStore } from "@/stores/useClientStore";
 import Spinner from "@/components/core/Spinner.vue";
+import { removeSpecialCharacters } from "@/utils/utils";
 
 useMeta({ title: "ROLs" });
 
@@ -312,6 +313,8 @@ const getStatusClass = (status) => {
       return "badge bg-warning";
     case "CONCLUIDO":
       return "badge bg-primary";
+    case "FINALIZADA":
+      return "badge bg-danger";
     case "CANCELADO":
       return "badge bg-danger";
     default:
@@ -384,6 +387,7 @@ function sortRol(field) {
 }
 
 async function sendRol(rol) {
+  rol.client.cellPhone = removeSpecialCharacters(rol.client.cellPhone);
   console.log(rol);
   Swal.fire({
     icon: "question",
@@ -406,6 +410,7 @@ async function sendRol(rol) {
             icon: "success",
             customClass: "sweet-alerts",
           });
+          openNewWindow(rol.client.cellPhone, rol.link);
         })
         .catch(() => {
           Swal.fire({
@@ -454,6 +459,11 @@ async function deleteClient(client) {
         });
     },
   });
+}
+
+function openNewWindow(cellPhone, link) {
+  var url = `https://wa.me/55${cellPhone}?text=Segue%20seu%20link%20http://localhost:8000/erol/${link}`;
+  window.open(url, "_blank");
 }
 
 function onModalClose() {
